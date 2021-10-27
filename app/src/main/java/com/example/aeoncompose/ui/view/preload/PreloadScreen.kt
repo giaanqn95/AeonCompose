@@ -20,7 +20,6 @@ import androidx.navigation.NavHostController
 import com.example.aeoncompose.R
 import com.example.aeoncompose.api.RequestState
 import com.example.aeoncompose.api.UiState
-import com.example.aeoncompose.data.SyncResponse
 import com.example.aeoncompose.ui.KYCScreen
 import com.example.aeoncompose.utils.LogCat
 
@@ -32,7 +31,7 @@ fun PreloadView(navHostController: NavHostController, preloadViewModel: PreloadV
 }
 
 @Composable
-fun PreloadContent(navHostController: NavHostController, uiState: UiState<SyncResponse>) {
+fun PreloadContent(navHostController: NavHostController, uiState: UiState<*>) {
     when (uiState.state) {
         RequestState.SUCCESS -> {
             LaunchedEffect(key1 = Unit, block = {

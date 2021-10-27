@@ -73,7 +73,7 @@ object ApiClientModule {
     @Singleton
     fun provideHttpKtorClient(): HttpClient = HttpClient(Android) {
         install(Logging) {
-            level = if (BuildConfig.DEBUG) LogLevel.ALL else LogLevel.NONE
+            level = if (BuildConfig.DEBUG) LogLevel.BODY else LogLevel.NONE
         }
         install(JsonFeature) {
             serializer = KotlinxSerializer()

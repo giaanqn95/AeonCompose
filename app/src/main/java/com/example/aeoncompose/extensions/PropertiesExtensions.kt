@@ -22,11 +22,13 @@ import androidx.navigation.compose.ComposeNavigator
 import androidx.navigation.compose.DialogNavigator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.aeoncompose.api.RequestState
 import com.example.aeoncompose.api.UiState
 import com.example.aeoncompose.utils.Constants.TIME_OUT
 import com.example.aeoncompose.utils.LogCat
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.transform
 
 
@@ -281,4 +283,15 @@ fun <T> Flow<T>.onExpiredToken(): Flow<T> = transform { value ->
     }
     LogCat.d("AAAAA onExpiredToken ${(value as UiState<*>).code}")
     return@transform emit(value)
+}
+
+suspend fun <T> checkStates(state: UiState<T>, success: suspend () -> Unit = {}, fail: suspend () -> Unit = {}) {
+    if (state.state == RequestState.SUCCESS) success.invoke()
+    else fail.invoke()
+}
+
+suspend fun <T, R> checkState(state: UiState<T>, success: suspend () -> R, fail: suspend () -> R) = flow {
+    if (state.state == RequestState.SUCCESS) emit(success.invoke())
+    else emit(fail.invoke())
+
 }
