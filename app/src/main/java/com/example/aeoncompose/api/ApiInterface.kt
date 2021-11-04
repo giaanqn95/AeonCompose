@@ -1,6 +1,6 @@
 package com.example.aeoncompose.api
 
-import kotlinx.serialization.json.JsonElement
+import com.google.gson.JsonElement
 import okhttp3.MultipartBody
 import retrofit2.http.*
 

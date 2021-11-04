@@ -14,7 +14,6 @@ import io.ktor.client.*
 import io.ktor.client.engine.android.*
 import io.ktor.client.features.*
 import io.ktor.client.features.json.*
-import io.ktor.client.features.json.serializer.*
 import io.ktor.client.features.logging.*
 import io.ktor.client.request.*
 import io.ktor.http.*
@@ -76,7 +75,10 @@ object ApiClientModule {
             level = if (BuildConfig.DEBUG) LogLevel.BODY else LogLevel.NONE
         }
         install(JsonFeature) {
-            serializer = KotlinxSerializer()
+            serializer = GsonSerializer {
+                setPrettyPrinting()
+                disableHtmlEscaping()
+            }
         }
         defaultRequest {
             host = "113.161.84.22:8063/api"

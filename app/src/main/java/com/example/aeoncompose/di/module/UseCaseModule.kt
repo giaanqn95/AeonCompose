@@ -1,10 +1,7 @@
 package com.example.aeoncompose.di.module
 
 import com.example.aeoncompose.api.RequestService
-import com.example.aeoncompose.di.usecase.GetProvince
-import com.example.aeoncompose.di.usecase.GetResource
-import com.example.aeoncompose.di.usecase.GetSync
-import com.example.aeoncompose.di.usecase.PreloadUseCase
+import com.example.aeoncompose.di.usecase.*
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -21,5 +18,10 @@ object UseCaseModule {
             resource = GetResource(requestService),
             province = GetProvince(requestService)
         )
+    }
+
+    @Provides
+    fun provideLoginUseCase(requestService: RequestService): LoginUseCase {
+        return LoginUseCase(request = requestService)
     }
 }

@@ -1,50 +1,61 @@
 package com.example.aeoncompose.ui.view.home
 
-import android.content.Context
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.OutlinedTextField
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.Divider
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.*
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.navigation.NavHostController
+import com.example.aeoncompose.R
 
 @Composable
 fun HomeScreen(navHostController: NavHostController) {
-    Box(contentAlignment = Alignment.Center,
-        modifier = Modifier
-            .fillMaxWidth()
-            .fillMaxHeight()
-            .clickable {
-            }) {
-        Text(text = "HomeScreen")
-    }
-}
 
-@Composable
-fun HelloScreen() {
-    var name by rememberSaveable { mutableStateOf("") }
+    Column {
+        ConstraintLayout(modifier = Modifier) {
+            val (imgAvatar, vDivider, tvName, tvPoint) = createRefs()
 
-    HelloContent(name = name, onNameChange = { name = it })
-}
+            Image(
+                painter = painterResource(id = R.drawable.logo_member),
+                contentDescription = null,
+                modifier = Modifier
+                    .background(Color.Transparent, CircleShape)
+                    .size(50.dp)
+                    .constrainAs(imgAvatar) {
+                        centerVerticallyTo(parent)
+                        start.linkTo(parent.start)
+                    }
+            )
 
-@Composable
-fun HelloContent(name: String, onNameChange: (String) -> Unit) {
-    Column(modifier = Modifier.padding(16.dp)) {
-        Text(
-            text = "Hello, $name",
-            modifier = Modifier.padding(bottom = 8.dp),
-            style = MaterialTheme.typography.h5
-        )
-        OutlinedTextField(
-            value = name,
-            onValueChange = onNameChange,
-            label = { Text("Name") }
-        )
+            Divider(modifier = Modifier
+                .fillMaxWidth()
+                .constrainAs(vDivider) {
+                    centerTo(parent)
+                })
+
+            Text(text = "Name", modifier = Modifier.constrainAs(tvName) {
+                start.linkTo(imgAvatar.end)
+                bottom.linkTo(vDivider.top)
+            })
+
+            Text(text = "6 points", modifier = Modifier.constrainAs(tvPoint) {
+                start.linkTo(imgAvatar.end)
+                top.linkTo(vDivider.bottom)
+            })
+        }
+
+        LazyColumn {
+
+        }
     }
 }

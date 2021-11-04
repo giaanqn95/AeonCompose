@@ -26,7 +26,6 @@ import com.example.aeoncompose.utils.LogCat
 @Composable
 fun PreloadView(navHostController: NavHostController, preloadViewModel: PreloadViewModel = hiltViewModel()) {
     val syncState = preloadViewModel.uiStateSync.value
-    LogCat.d("AAAAA ${syncState.state.name}")
     PreloadContent(navHostController = navHostController, syncState)
 }
 
@@ -70,5 +69,4 @@ fun PreloadContent(navHostController: NavHostController, uiState: UiState<*>) {
             }
         }
     }
-
 }

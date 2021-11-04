@@ -15,6 +15,11 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import androidx.activity.addCallback
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.composed
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavHostController
@@ -293,5 +298,11 @@ suspend fun <T> checkStates(state: UiState<T>, success: suspend () -> Unit = {},
 suspend fun <T, R> checkState(state: UiState<T>, success: suspend () -> R, fail: suspend () -> R) = flow {
     if (state.state == RequestState.SUCCESS) emit(success.invoke())
     else emit(fail.invoke())
+}
 
+inline fun Modifier.onClick(crossinline onClick: ()->Unit): Modifier = composed {
+    clickable(indication = null,
+        interactionSource = remember { MutableInteractionSource() }) {
+        onClick()
+    }
 }

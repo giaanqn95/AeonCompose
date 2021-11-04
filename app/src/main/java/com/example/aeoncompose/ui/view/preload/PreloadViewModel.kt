@@ -4,11 +4,11 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.SavedStateHandle
 import com.example.aeoncompose.api.PreloadRepo
+import com.example.aeoncompose.api.RequestState
 import com.example.aeoncompose.api.UiState
 import com.example.aeoncompose.base.BaseViewModel
-import com.example.aeoncompose.data.SyncResponse
+import com.example.aeoncompose.data.response.SyncResponse
 import com.example.aeoncompose.di.usecase.PreloadUseCase
-import com.example.aeoncompose.extensions.checkStates
 import com.example.aeoncompose.utils.LogCat
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -34,21 +34,35 @@ class PreloadViewModel @Inject constructor(
     @OptIn(ExperimentalCoroutinesApi::class)
     private fun getSyncData() = viewModelScope {
         request.sync(repo.repoGetSync()).onStart {
-            _isLoading.value = true
+            LogCat.d("getSyncData onStart")
         }.onCompletion {
-            _isLoading.value = false
+            LogCat.d("getSyncData onCompletion")
+        }.flatMapConcat {
+            LogCat.d("getSyncData flatMapConcat")
+            getResource(it).flatMapConcat { getProvince(it) }
         }.onEach {
-            checkStates(it, success = {
-                merge(request.resource(repo.repoGetResource()).onEach { resource ->
-                    LogCat.d("BBBBB ${resource.state.name}")
-                }, request.province(repo.repoGetProvince()).onEach { province ->
-                    LogCat.d("BBBBB ${province.state.name}")
-                }).collect { collect->
-                    LogCat.d("BBBBB ${collect.state.name}")
-                }
-            })
+            LogCat.d("getSyncData onEach")
         }.collect {
+            LogCat.d("getSyncData collect")
             _uiStateSync.value = it
+        }
+    }
+
+    private fun getResource(uiState: UiState<SyncResponse>) = flow<UiState<SyncResponse>> {
+        request.resource(repo.repoGetResource()).collect {
+            if (it.state == RequestState.SUCCESS)
+                emit(uiState)
+            else
+                emit(UiState(RequestState.FAIL))
+        }
+    }
+
+    private fun getProvince(uiState: UiState<SyncResponse>) = flow<UiState<SyncResponse>> {
+        request.province(repo.repoGetProvince()).collect {
+            if (it.state == RequestState.SUCCESS)
+                emit(uiState)
+            else
+                emit(UiState(RequestState.FAIL))
         }
     }
 }

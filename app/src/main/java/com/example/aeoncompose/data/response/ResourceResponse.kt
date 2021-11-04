@@ -1,4 +1,4 @@
-package com.example.aeoncompose.data
+package com.example.aeoncompose.data.response
 
 import android.graphics.drawable.Icon
 

@@ -2,33 +2,12 @@ package com.example.aeoncompose.api
 
 import com.example.aeoncompose.api.process_api.Repo
 import com.example.aeoncompose.api.process_api.TypeRepo
+import com.example.aeoncompose.data.request.LoginRequest
 
-class RepoManager : LoginRepoUseCase,
+class RepoManager :
     RegisterRepoUseCase,
-    PreloadRepo
-
-interface LoginRepoUseCase {
-
-    fun repoLoginUsername(phoneNumber: String): Repo = Repo(
-        HashMap(),
-        "user/register/",
-        if (phoneNumber.startsWith("0")) phoneNumber else "0$phoneNumber",
-        "USERNAME_2000",
-        TypeRepo.GET
-    )
-
-    fun repoSync(): Repo {
-        val hashMap = HashMap<String, String>()
-        hashMap["x-api-key"] = "3EB76D87D97C427943957C555AB0B60847582D38CB1688ED86C59251206305E3"
-        return Repo(
-            hashMap,
-            "sync",
-            "",
-            "",
-            TypeRepo.GET
-        )
-    }
-}
+    PreloadRepo,
+    LoginRepo
 
 interface PreloadRepo {
 
@@ -77,4 +56,16 @@ interface RegisterRepoUseCase {
         "USERNAME_2000",
         TypeRepo.GET
     )
+}
+
+interface LoginRepo {
+    fun repoLogin(phoneNumber: String, password: String): Repo {
+        val hashMap = HashMap<String, String>()
+        hashMap["x-api-key"] = "3EB76D87D97C427943957C555AB0B60847582D38CB1688ED86C59251206305E3"
+        return Repo(
+            hashMap,
+            "auth",
+            message = LoginRequest(phoneNumber, password)
+        )
+    }
 }

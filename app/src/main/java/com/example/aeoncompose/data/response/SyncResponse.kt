@@ -1,4 +1,4 @@
-package com.example.aeoncompose.data
+package com.example.aeoncompose.data.response
 
 class SyncResponse(
     val ANDROID_APP_VERSION: Int,

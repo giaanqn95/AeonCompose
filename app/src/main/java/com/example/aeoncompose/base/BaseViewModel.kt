@@ -4,21 +4,14 @@ import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.aeoncompose.R
 import com.example.aeoncompose.api.RepoManager
 import com.example.aeoncompose.api.ResultWrapper
-import com.example.aeoncompose.api.process_api.RetrofitService
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import javax.inject.Inject
 import kotlin.coroutines.CoroutineContext
 
 open class BaseViewModel<R>() : ViewModel(), LifecycleObserver, CoroutineScope {
-
-    var _isLoading = MutableStateFlow(false)
-    var isLoading: StateFlow<Boolean> = _isLoading
 
     var _error = MutableStateFlow(ResultWrapper.ErrorThrowable("-1"))
     var error: StateFlow<ResultWrapper.ErrorThrowable> = _error

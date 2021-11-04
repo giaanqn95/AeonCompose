@@ -26,3 +26,8 @@ enum class HomeScreen(val body: @Composable ((String) -> Unit) -> Unit) {
         fun getName() = "HomeScreens"
     }
 }
+
+enum class AeonDialog() {
+
+    DialogSingle;
+}
