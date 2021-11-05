@@ -30,6 +30,7 @@ import androidx.navigation.NavHostController
 import com.example.aeoncompose.R
 import com.example.aeoncompose.api.RequestState
 import com.example.aeoncompose.api.UiState
+import com.example.aeoncompose.data.response.LoginResponse
 import com.example.aeoncompose.extensions.onClick
 import com.example.aeoncompose.ui.AeonDialog
 import com.example.aeoncompose.ui.HomeScreen
@@ -45,9 +46,6 @@ fun LoginView(navHostController: NavHostController, loginViewModel: LoginViewMod
     val loginState = loginViewModel.uiStateLogin.value
     val isLoading = loginViewModel.isLoading.value
     val focusManager = LocalFocusManager.current
-    var phone by remember { mutableStateOf("0901169215") }
-    var password by remember { mutableStateOf("ab123123") }
-    val focusRequester = remember { FocusRequester() }
 
     Box(modifier = Modifier
         .background(MaterialTheme.colors.primary)
@@ -76,110 +74,124 @@ fun LoginView(navHostController: NavHostController, loginViewModel: LoginViewMod
                 .align(Alignment.TopCenter)
                 .padding(top = 20.dp),
         )
-
-        Column(
-            modifier = Modifier.fillMaxHeight(),
-            verticalArrangement = Arrangement.Bottom,
-        ) {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(start = 15.dp, end = 15.dp),
-                horizontalArrangement = Arrangement.End,
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
-                Image(
-                    painter = painterResource(id = R.drawable.ic_language_login),
-                    modifier = Modifier.size(15.dp),
-                    contentDescription = null
-                )
-
-                Spacer(modifier = Modifier.width(2.dp))
-
-                Text(
-                    text = "Ngôn ngữ",
-                    style = MaterialTheme.typography.h1,
-                    fontSize = 14.sp,
-                    color = Color.White
-                )
-            }
-            Spacer(modifier = Modifier.height(10.dp))
-            Card(
-                backgroundColor = MaterialTheme.colors.primary,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(start = 15.dp, end = 15.dp), elevation = 5.dp
-            ) {
-                Column(modifier = Modifier.padding(10.dp)) {
-                    AeonTextField(
-                        label = "Số điện thoại",
-                        value = phone,
-                        onValueChange = {
-                            phone = it
-                        }, modifier = Modifier.fillMaxWidth(),
-                        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
-                        keyboardActions = KeyboardActions(onNext = { focusRequester.requestFocus() })
-                    )
-                    AeonTextField(
-                        label = "Mật khẩu",
-                        value = password,
-                        onValueChange = {
-                            password = it
-                        }, modifier = Modifier
-                            .fillMaxWidth()
-                            .focusRequester(focusRequester),
-                        keyboardActions = KeyboardActions(
-                            onDone = { focusManager.clearFocus() },
-                        ),
-                        inputType = PasswordVisualTransformation()
-                    )
-                    Spacer(modifier = Modifier.height(20.dp))
-                    AeonButtonText("Đăng nhập") { loginViewModel.postLogin(phone, password) }
-                    Spacer(modifier = Modifier.height(5.dp))
-                    Text(
-                        text = "Quên mật khẩu",
-                        modifier = Modifier
-                            .clickable {
-
-                            }
-                            .fillMaxWidth(),
-                        textAlign = TextAlign.Center, color = Color.White
-                    )
-                    Spacer(modifier = Modifier.height(3.dp))
-                }
-            }
-
-            Spacer(modifier = Modifier.height(30.dp))
-
-            Image(
-                painter = painterResource(id = R.drawable.footer_login),
-                contentDescription = null,
-                contentScale = ContentScale.Crop,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(height = (ScreenUtils.screenHeight * 7 / 20).dp)
-            )
-        }
+        InputKYCForm(loginViewModel)
         AnimatedVisibility(visible = isLoading) {
             DialogLoading()
         }
 
-        when (loginState.state) {
-            RequestState.SUCCESS -> {
-                LaunchedEffect(key1 = loginState.state, block = {
-                    navHostController.navigate(HomeScreen.Home.name) {
-                        popUpTo(KYCScreen.getName()) {
-                            inclusive = true
+        handleState(navHostController = navHostController, loginState = loginState)
+        loginViewModel._uiStateLogin.value = UiState(RequestState.NON)
+    }
+}
+
+@Composable
+private fun InputKYCForm(loginViewModel: LoginViewModel) {
+    var phone by remember { mutableStateOf("0901169215") }
+    var password by remember { mutableStateOf("ab123123") }
+    val focusRequester = remember { FocusRequester() }
+    val focusManager = LocalFocusManager.current
+
+    Column(
+        modifier = Modifier.fillMaxHeight(),
+        verticalArrangement = Arrangement.Bottom,
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(start = 15.dp, end = 15.dp),
+            horizontalArrangement = Arrangement.End,
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Image(
+                painter = painterResource(id = R.drawable.ic_language_login),
+                modifier = Modifier.size(15.dp),
+                contentDescription = null
+            )
+
+            Spacer(modifier = Modifier.width(2.dp))
+
+            Text(
+                text = "Ngôn ngữ",
+                style = MaterialTheme.typography.h1,
+                fontSize = 14.sp,
+                color = Color.White
+            )
+        }
+        Spacer(modifier = Modifier.height(10.dp))
+        Card(
+            backgroundColor = MaterialTheme.colors.primary,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(start = 15.dp, end = 15.dp), elevation = 5.dp
+        ) {
+            Column(modifier = Modifier.padding(10.dp)) {
+                AeonTextField(
+                    label = "Số điện thoại",
+                    value = phone,
+                    onValueChange = {
+                        phone = it
+                    }, modifier = Modifier.fillMaxWidth(),
+                    keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
+                    keyboardActions = KeyboardActions(onNext = { focusRequester.requestFocus() })
+                )
+                AeonTextField(
+                    label = "Mật khẩu",
+                    value = password,
+                    onValueChange = {
+                        password = it
+                    }, modifier = Modifier
+                        .fillMaxWidth()
+                        .focusRequester(focusRequester),
+                    keyboardActions = KeyboardActions(
+                        onDone = { focusManager.clearFocus() },
+                    ),
+                    inputType = PasswordVisualTransformation()
+                )
+                Spacer(modifier = Modifier.height(20.dp))
+                AeonButtonText("Đăng nhập") { loginViewModel.postLogin(phone, password) }
+                Spacer(modifier = Modifier.height(5.dp))
+                Text(
+                    text = "Quên mật khẩu",
+                    modifier = Modifier
+                        .clickable {
+
                         }
-                    }
-                })
-            }
-            RequestState.FAIL -> {
-                LaunchedEffect(key1 = loginState.state, block = {
-                    navHostController.navigate(AeonDialog.DialogSingle.name + "/${loginState.message}")
-                })
+                        .fillMaxWidth(),
+                    textAlign = TextAlign.Center, color = Color.White
+                )
+                Spacer(modifier = Modifier.height(3.dp))
             }
         }
-        loginViewModel._uiStateLogin.value = UiState(RequestState.NON)
+
+        Spacer(modifier = Modifier.height(30.dp))
+
+        Image(
+            painter = painterResource(id = R.drawable.footer_login),
+            contentDescription = null,
+            contentScale = ContentScale.Crop,
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(height = (ScreenUtils.screenHeight * 7 / 20).dp)
+        )
+    }
+}
+
+@Composable
+private fun handleState(navHostController: NavHostController, loginState: UiState<LoginResponse>) {
+    when (loginState.state) {
+        RequestState.SUCCESS -> {
+            LaunchedEffect(key1 = loginState.state, block = {
+                navHostController.navigate(HomeScreen.Home.name) {
+                    popUpTo(KYCScreen.getName()) {
+                        inclusive = true
+                    }
+                }
+            })
+        }
+        RequestState.FAIL -> {
+            LaunchedEffect(key1 = loginState.state, block = {
+                navHostController.navigate(AeonDialog.DialogSingle.name + "/${loginState.message}")
+            })
+        }
     }
 }

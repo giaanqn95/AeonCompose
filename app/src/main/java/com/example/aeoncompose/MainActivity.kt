@@ -96,7 +96,7 @@ fun MainView() {
         Surface(color = MaterialTheme.colors.background) {
             NavHost(
                 navController = navController,
-                startDestination = KYCScreen.getName(),
+                startDestination = HomeScreen.getName(),
             ) {
                 navigation(startDestination = KYCScreen.Preload.name, route = KYCScreen.getName()) {
                     composable(KYCScreen.Preload.name) { PreloadView(navHostController = navController) }
