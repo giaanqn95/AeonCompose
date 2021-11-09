@@ -1,71 +1,29 @@
 package com.example.aeoncompose.api
 
-import com.example.aeoncompose.api.process_api.Repo
-import com.example.aeoncompose.api.process_api.TypeRepo
-import com.example.aeoncompose.data.request.LoginRequest
+import com.example.aeoncompose.data.ProfileService
+import com.example.aeoncompose.di.module.ApiClientModule.AEON_API_KEY
+import com.example.aeoncompose.di.module.ApiClientModule.HEADER_API_KEY
+import com.example.aeoncompose.di.module.ApiClientModule.HEADER_AUTHORIZATION
+import com.example.aeoncompose.di.module.ApiClientModule.HEADER_LANG
+import com.example.aeoncompose.di.module.ApiClientModule.HEADER_UUID
+import com.example.aeoncompose.ui.view.home.HomeRepo
+import com.example.aeoncompose.ui.view.login.LoginRepo
+import com.example.aeoncompose.ui.view.preload.PreloadRepo
+import java.util.*
+import kotlin.collections.HashMap
 
 class RepoManager :
-    RegisterRepoUseCase,
     PreloadRepo,
-    LoginRepo
+    LoginRepo,
+    HomeRepo
 
-interface PreloadRepo {
-
-    fun repoGetSync(): Repo {
-        val hashMap = HashMap<String, String>()
-        hashMap["x-api-key"] = "3EB76D87D97C427943957C555AB0B60847582D38CB1688ED86C59251206305E3"
-        return Repo(
-            hashMap,
-            "sync",
-            "",
-            "",
-            TypeRepo.GET
-        )
-    }
-
-    fun repoGetResource(): Repo {
-        val hashMap = HashMap<String, String>()
-        hashMap["x-api-key"] = "3EB76D87D97C427943957C555AB0B60847582D38CB1688ED86C59251206305E3"
-        return Repo(
-            hashMap,
-            "resources",
-            "",
-            "",
-            TypeRepo.GET
-        )
-    }
-
-    fun repoGetProvince(): Repo {
-        val hashMap = HashMap<String, String>()
-        hashMap["x-api-key"] = "3EB76D87D97C427943957C555AB0B60847582D38CB1688ED86C59251206305E3"
-        return Repo(
-            hashMap,
-            "get_provices",
-            "",
-            "",
-            TypeRepo.GET
-        )
-    }
-}
-
-interface RegisterRepoUseCase {
-    fun repoRegister(phoneNumber: String): Repo = Repo(
-        HashMap(),
-        "user/register/",
-        if (phoneNumber.startsWith("0")) phoneNumber else "0$phoneNumber",
-        "USERNAME_2000",
-        TypeRepo.GET
-    )
-}
-
-interface LoginRepo {
-    fun repoLogin(phoneNumber: String, password: String): Repo {
-        val hashMap = HashMap<String, String>()
-        hashMap["x-api-key"] = "3EB76D87D97C427943957C555AB0B60847582D38CB1688ED86C59251206305E3"
-        return Repo(
-            hashMap,
-            "auth",
-            message = LoginRequest(phoneNumber, password)
-        )
+interface BaseRepo {
+    fun getHeaders(): HashMap<String, String> {
+        val headers = HashMap<String, String>()
+        if (ProfileService.authen.access_token.isNotEmpty()) headers[HEADER_AUTHORIZATION] = ProfileService.authen.access_token
+        headers[HEADER_LANG] = "vi"
+        headers[HEADER_API_KEY] = AEON_API_KEY
+        headers[HEADER_UUID] = UUID.randomUUID().toString()
+        return headers
     }
 }

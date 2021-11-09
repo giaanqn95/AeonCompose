@@ -23,13 +23,13 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.example.aeoncompose.R
 import com.example.aeoncompose.api.RequestState
 import com.example.aeoncompose.api.UiState
+import com.example.aeoncompose.data.ProfileService
 import com.example.aeoncompose.data.response.LoginResponse
 import com.example.aeoncompose.extensions.onClick
 import com.example.aeoncompose.ui.AeonDialog
@@ -39,6 +39,7 @@ import com.example.aeoncompose.ui.base_view.AeonButtonText
 import com.example.aeoncompose.ui.base_view.AeonTextField
 import com.example.aeoncompose.ui.base_view.DialogLoading
 import com.example.aeoncompose.utils.ScreenUtils
+import com.example.aeoncompose.utils.ScreenUtils.rdp
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
@@ -49,31 +50,12 @@ fun LoginView(navHostController: NavHostController, loginViewModel: LoginViewMod
 
     Box(modifier = Modifier
         .background(MaterialTheme.colors.primary)
-        .padding(top = 20.dp)
+        .padding(top = 20.rdp)
         .fillMaxSize()
         .onClick {
             focusManager.clearFocus()
         }) {
-        Image(
-            painter = painterResource(id = R.drawable.background_register), contentDescription = null,
-            modifier = Modifier.matchParentSize(),
-            contentScale = ContentScale.Crop
-        )
-        Image(
-            painter = painterResource(id = R.drawable.ic_arrow_back), contentDescription = null,
-            modifier = Modifier
-                .size(65.dp)
-                .padding(10.dp)
-                .clickable { navHostController.popBackStack() },
-            alignment = Alignment.TopStart
-        )
-        Image(
-            painter = painterResource(id = R.drawable.logo_member),
-            contentDescription = null,
-            modifier = Modifier
-                .align(Alignment.TopCenter)
-                .padding(top = 20.dp),
-        )
+        BackgroundAndHeader(navHostController)
         InputKYCForm(loginViewModel)
         AnimatedVisibility(visible = isLoading) {
             DialogLoading()
@@ -82,6 +64,30 @@ fun LoginView(navHostController: NavHostController, loginViewModel: LoginViewMod
         handleState(navHostController = navHostController, loginState = loginState)
         loginViewModel._uiStateLogin.value = UiState(RequestState.NON)
     }
+}
+
+@Composable
+private fun BoxScope.BackgroundAndHeader(navHostController: NavHostController) {
+    Image(
+        painter = painterResource(id = R.drawable.background_register), contentDescription = null,
+        modifier = Modifier.matchParentSize(),
+        contentScale = ContentScale.Crop
+    )
+    Image(
+        painter = painterResource(id = R.drawable.ic_arrow_back), contentDescription = null,
+        modifier = Modifier
+            .size(65.rdp)
+            .padding(10.rdp)
+            .clickable { navHostController.popBackStack() },
+        alignment = Alignment.TopStart
+    )
+    Image(
+        painter = painterResource(id = R.drawable.logo_member),
+        contentDescription = null,
+        modifier = Modifier
+            .align(Alignment.TopCenter)
+            .padding(top = 20.rdp),
+    )
 }
 
 @Composable
@@ -98,17 +104,17 @@ private fun InputKYCForm(loginViewModel: LoginViewModel) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(start = 15.dp, end = 15.dp),
+                .padding(start = 15.rdp, end = 15.rdp),
             horizontalArrangement = Arrangement.End,
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Image(
                 painter = painterResource(id = R.drawable.ic_language_login),
-                modifier = Modifier.size(15.dp),
+                modifier = Modifier.size(15.rdp),
                 contentDescription = null
             )
 
-            Spacer(modifier = Modifier.width(2.dp))
+            Spacer(modifier = Modifier.width(2.rdp))
 
             Text(
                 text = "Ngôn ngữ",
@@ -117,14 +123,14 @@ private fun InputKYCForm(loginViewModel: LoginViewModel) {
                 color = Color.White
             )
         }
-        Spacer(modifier = Modifier.height(10.dp))
+        Spacer(modifier = Modifier.height(10.rdp))
         Card(
             backgroundColor = MaterialTheme.colors.primary,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(start = 15.dp, end = 15.dp), elevation = 5.dp
+                .padding(start = 15.rdp, end = 15.rdp), elevation = 5.rdp
         ) {
-            Column(modifier = Modifier.padding(10.dp)) {
+            Column(modifier = Modifier.padding(10.rdp)) {
                 AeonTextField(
                     label = "Số điện thoại",
                     value = phone,
@@ -147,9 +153,9 @@ private fun InputKYCForm(loginViewModel: LoginViewModel) {
                     ),
                     inputType = PasswordVisualTransformation()
                 )
-                Spacer(modifier = Modifier.height(20.dp))
+                Spacer(modifier = Modifier.height(20.rdp))
                 AeonButtonText("Đăng nhập") { loginViewModel.postLogin(phone, password) }
-                Spacer(modifier = Modifier.height(5.dp))
+                Spacer(modifier = Modifier.height(5.rdp))
                 Text(
                     text = "Quên mật khẩu",
                     modifier = Modifier
@@ -159,11 +165,11 @@ private fun InputKYCForm(loginViewModel: LoginViewModel) {
                         .fillMaxWidth(),
                     textAlign = TextAlign.Center, color = Color.White
                 )
-                Spacer(modifier = Modifier.height(3.dp))
+                Spacer(modifier = Modifier.height(3.rdp))
             }
         }
 
-        Spacer(modifier = Modifier.height(30.dp))
+        Spacer(modifier = Modifier.height(30.rdp))
 
         Image(
             painter = painterResource(id = R.drawable.footer_login),
@@ -171,7 +177,7 @@ private fun InputKYCForm(loginViewModel: LoginViewModel) {
             contentScale = ContentScale.Crop,
             modifier = Modifier
                 .fillMaxWidth()
-                .height(height = (ScreenUtils.screenHeight * 7 / 20).dp)
+                .height(height = (ScreenUtils.screenHeight * 7 / 20).rdp)
         )
     }
 }
@@ -181,6 +187,7 @@ private fun handleState(navHostController: NavHostController, loginState: UiStat
     when (loginState.state) {
         RequestState.SUCCESS -> {
             LaunchedEffect(key1 = loginState.state, block = {
+                ProfileService.authen = loginState.result ?: LoginResponse()
                 navHostController.navigate(HomeScreen.Home.name) {
                     popUpTo(KYCScreen.getName()) {
                         inclusive = true

@@ -1,6 +1,4 @@
-package com.example.aeoncompose.api.process_api
-
-import okhttp3.MultipartBody
+package com.example.aeoncompose.api
 
 /**
  * Created by giaan on 11/18/20.
@@ -13,7 +11,6 @@ class Repo(
     val message: Any? = null,
     val codeRequired: Any? = null,
     val typeRepo: TypeRepo = TypeRepo.GET,
-    val multiPart: MultipartBody.Part? = null
 )
 
 enum class TypeRepo {

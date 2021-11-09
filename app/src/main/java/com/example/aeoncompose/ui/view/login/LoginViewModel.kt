@@ -5,7 +5,6 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
-import com.example.aeoncompose.api.LoginRepo
 import com.example.aeoncompose.api.UiState
 import com.example.aeoncompose.base.BaseViewModel
 import com.example.aeoncompose.data.response.LoginResponse
@@ -30,11 +29,13 @@ class LoginViewModel @Inject constructor(
 
     var _isLoading = mutableStateOf(false)
     var isLoading: State<Boolean> = _isLoading
+
     init {
         savedStateHandle.get<UiState<LoginResponse>>("sync")?.let {
             _uiStateLogin.value = it
         }
     }
+
     @Stable
     @OptIn(ExperimentalCoroutinesApi::class)
     fun postLogin(phoneNumber: String, password: String) = viewModelScope {

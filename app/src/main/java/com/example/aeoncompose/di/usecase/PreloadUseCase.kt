@@ -1,9 +1,10 @@
 package com.example.aeoncompose.di.usecase
 
+import com.example.aeoncompose.api.Repo
 import com.example.aeoncompose.api.RequestService
 import com.example.aeoncompose.api.RequestState
 import com.example.aeoncompose.api.UiState
-import com.example.aeoncompose.api.process_api.Repo
+import com.example.aeoncompose.api.repository.AuthenRepository
 import com.example.aeoncompose.data.response.ProvinceResponse
 import com.example.aeoncompose.data.response.ResourceResponse
 import com.example.aeoncompose.data.response.SyncResponse
@@ -14,7 +15,8 @@ import kotlinx.coroutines.flow.flow
 class PreloadUseCase(
     val sync: GetSync,
     val resource: GetResource,
-    val province: GetProvince
+    val province: GetProvince,
+    val getAuthentic: GetAuthentic
 )
 
 class GetSync(private val request: RequestService) {
@@ -53,5 +55,11 @@ class GetProvince(private val request: RequestService) {
                 emit(UiState(RequestState.FAIL, message = it.message))
             }
         ).get(repo)
+    }
+}
+
+class GetAuthentic(private val authenRepository: AuthenRepository) {
+    operator fun invoke() = flow {
+        emit(UiState(RequestState.SUCCESS, authenRepository.getAuthen()))
     }
 }

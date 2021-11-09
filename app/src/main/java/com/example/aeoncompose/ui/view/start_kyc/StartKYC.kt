@@ -11,13 +11,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.aeoncompose.R
 import com.example.aeoncompose.ui.KYCScreen
 import com.example.aeoncompose.ui.base_view.AeonButtonText
 import com.example.aeoncompose.utils.ScreenUtils
+import com.example.aeoncompose.utils.ScreenUtils.rdp
 
 
 @Composable
@@ -32,13 +32,13 @@ fun StartKYC(navHostController: NavHostController) {
         Image(
             painter = painterResource(id = R.drawable.logo_white),
             contentDescription = null,
-            modifier = Modifier.height(45.dp).padding(top = 15.dp, start = 15.dp),
+            modifier = Modifier.height(45.rdp).padding(top = 15.rdp, start = 15.rdp),
             alignment = Alignment.TopStart
         )
         Image(
             painter = painterResource(id = R.drawable.logo_member),
             contentDescription = null,
-            modifier = Modifier.align(Alignment.TopEnd).padding(top = 15.dp, end = 15.dp),
+            modifier = Modifier.align(Alignment.TopEnd).padding(top = 15.rdp, end = 15.rdp),
             alignment = Alignment.TopEnd
         )
         Column(
@@ -48,17 +48,17 @@ fun StartKYC(navHostController: NavHostController) {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(start = 15.dp, end = 15.dp),
+                    .padding(start = 15.rdp, end = 15.rdp),
                 horizontalArrangement = Arrangement.End,
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 Image(
                     painter = painterResource(id = R.drawable.ic_language_login),
-                    modifier = Modifier.size(15.dp),
+                    modifier = Modifier.size(15.rdp),
                     contentDescription = null
                 )
 
-                Spacer(modifier = Modifier.width(2.dp))
+                Spacer(modifier = Modifier.width(2.rdp))
 
                 Text(
                     text = "Ngôn ngữ",
@@ -67,30 +67,30 @@ fun StartKYC(navHostController: NavHostController) {
                     color = Color.White
                 )
             }
-            Spacer(modifier = Modifier.height(10.dp))
+            Spacer(modifier = Modifier.height(10.rdp))
             Card(
                 backgroundColor = MaterialTheme.colors.primary,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(start = 15.dp, end = 15.dp), elevation = 5.dp
+                    .padding(start = 15.rdp, end = 15.rdp), elevation = 5.rdp
             ) {
-                Column(modifier = Modifier.padding(10.dp)) {
+                Column(modifier = Modifier.padding(10.rdp)) {
                     AeonButtonText("Đăng nhập") {
                         navHostController.navigate(KYCScreen.Login.name) {
                         }
                     }
-                    Spacer(modifier = Modifier.height(5.dp))
+                    Spacer(modifier = Modifier.height(5.rdp))
                     AeonButtonText("Đăng ký thành viên mới") {
 
                     }
-                    Spacer(modifier = Modifier.height(5.dp))
+                    Spacer(modifier = Modifier.height(5.rdp))
                     AeonButtonText("Bạn đã có thẻ thành viên") {
 
                     }
                 }
             }
 
-            Spacer(modifier = Modifier.height(ScreenUtils.screenHeight.dp /10))
+            Spacer(modifier = Modifier.height(ScreenUtils.screenHeight.rdp /10))
 
             Image(
                 painter = painterResource(id = R.drawable.footer_login),
@@ -98,7 +98,7 @@ fun StartKYC(navHostController: NavHostController) {
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(height = (ScreenUtils.screenHeight * 7 / 20).dp)
+                    .height(height = (ScreenUtils.screenHeight * 7 / 20).rdp)
             )
         }
     }

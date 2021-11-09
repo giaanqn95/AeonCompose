@@ -11,13 +11,10 @@ import android.view.ViewGroup
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import com.example.aeoncompose.extensions.launchWhenCreated
 import com.example.aeoncompose.utils.LogCat
-import dagger.hilt.android.AndroidEntryPoint
 
 abstract class BaseFragment<VM : BaseViewModel<*>> : Fragment() {
     private val DELAYED_TIME_FOR_INIT_SCREEN = 160L
@@ -57,12 +54,6 @@ abstract class BaseFragment<VM : BaseViewModel<*>> : Fragment() {
                 }
             }
         }
-    }
-
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        LogCat.d("Lifecycle in Fragment onActivityCreated " + this.javaClass.name)
-        handler.postDelayed(runnable, DELAYED_TIME_FOR_INIT_SCREEN)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
