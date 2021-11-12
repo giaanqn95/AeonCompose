@@ -1,5 +1,6 @@
 package com.example.aeoncompose.di.module
 
+import android.app.Application
 import com.example.aeoncompose.BuildConfig
 import com.example.aeoncompose.api.RequestService
 import dagger.Module
@@ -32,7 +33,7 @@ object ApiClientModule {
     @Singleton
     fun provideHttpKtorClient(): HttpClient = HttpClient(Android) {
         install(Logging) {
-            level = if (BuildConfig.DEBUG) LogLevel.BODY else LogLevel.NONE
+            level = if (BuildConfig.DEBUG) LogLevel.ALL else LogLevel.NONE
         }
         install(JsonFeature) {
             serializer = GsonSerializer {
@@ -52,8 +53,7 @@ object ApiClientModule {
     }
 
     @Provides
-    @Singleton
-    fun provideRequestService(client: HttpClient): RequestService {
-        return RequestService(client)
+    fun provideRequestService(client: HttpClient, activity: Application): RequestService {
+        return RequestService(client, activity)
     }
 }

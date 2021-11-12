@@ -5,80 +5,43 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.Layout
 
 @Composable
-fun StaggeredGrid(
+        /**
+         * [fixedCount] is total item per row.
+         * */
+fun GridLayout(
     modifier: Modifier = Modifier,
-    rows: Int = 4,
+    fixedCount: Int = 4 /*default*/,
     content: @Composable () -> Unit
 ) {
-    Layout(
-        modifier = modifier,
-        content = content
-    ) { measurables, constraints ->
-        val rowWidths = IntArray(rows) { 0 }
-
-        // Keep track of the max height of each row
-        val rowHeights = IntArray(rows) { 0 }
-
-        // Don't constrain child views further, measure them with given constraints
-        // List of measured children
+    Layout(modifier = modifier, content = content) { measurables, constraints ->
+        /**
+        Để không bị sai trong trường hợp [measurables.size/fixedCount] không tròn (làm tròn xuống) => tính sai số hàng => [parentHeight] sẽ không hiển
+        thị hàng cuối cùng.
+        Cách giải quyết:
+        => [positionRow] là vị trí của hàng đang có
+        => [totalRow] = [positionRow] + 1
+        => [parentHeight] = [childSize] * [totalRow]
+         **/
+        var totalRow = 0
+        val childX = IntArray(measurables.size) { 0 }
+        val childY = IntArray(measurables.size) { 0 }
+        val childSize = constraints.maxWidth / fixedCount
         val placeables = measurables.mapIndexed { index, measurable ->
-            // Measure each child
-            val placeable = measurable.measure(constraints)
-
-            // Track the width and max height of each row
-            val row = index % rows
-//            rowWidths[row] += placeable.width
-//            rowHeights[row] = max(rowHeights[row], placeable.height)
-
-            rowWidths[row] = placeable.width
-            rowHeights[row] = placeable.height
-
+            val placeable = measurable.measure(constraints.copy(childSize, childSize, childSize, childSize))
+            val positionColumn = index % fixedCount
+            val positionRow = index / fixedCount
+            childX[index] = placeable.width * positionColumn
+            childY[index] = placeable.height * positionRow
+            totalRow = positionRow + 1
             placeable
         }
-//        * (measurables.size / rows)
-        val width = constraints.maxWidth
 
-        // Grid's height is the sum of the tallest element of each row
-        // coerced to the height constraints
-        val height = (rowHeights.maxOrNull()?.coerceIn(constraints.minHeight.rangeTo(constraints.maxHeight))
-            ?: constraints.maxHeight) * (measurables.size / rows)
+        val parentWidth = constraints.maxWidth
+        val parentHeight = (childSize * totalRow)
 
-        // Y of each row, based on the height accumulation of previous rows
-//        val rowY = IntArray(rows) { 0 }
-//        for (i in 1 until rows) {
-//            rowY[i] = rowY[i-1] + rowHeights[i-1]
-//        }
-//
-//        layout(width, height) {
-//            // x cord we have placed up to, per row
-//            val rowX = IntArray(rows) { 0 }
-//
-//            placeables.forEachIndexed { index, placeable ->
-//                val row = index % rows
-//                placeable.placeRelative(
-//                    x = rowX[row],
-//                    y = rowY[row]
-//                )
-//                rowX[row] += placeable.width
-//            }
-//        }
-
-        val rowX = IntArray(rows) { 0 }
-        for (i in 1 until rows) {
-            rowX[i] = rowX[i - 1] + rowWidths[i - 1]
-        }
-
-        layout(width, height) {
-            // x cord we have placed up to, per row
-            val rowY = IntArray(rows) { 0 }
-
+        layout(parentWidth, parentHeight) {
             placeables.forEachIndexed { index, placeable ->
-                val row = index % rows
-                placeable.placeRelative(
-                    x = rowX[row],
-                    y = rowY[row]
-                )
-                rowY[row] += placeable.height
+                placeable.placeRelative(childX[index], childY[index])
             }
         }
     }

@@ -1,9 +1,9 @@
 package com.example.aeoncompose.di.usecase
 
+import com.example.aeoncompose.api.Repo
 import com.example.aeoncompose.api.RequestService
 import com.example.aeoncompose.api.RequestState
 import com.example.aeoncompose.api.UiState
-import com.example.aeoncompose.api.Repo
 import com.example.aeoncompose.api.repository.AuthenRepository
 import com.example.aeoncompose.data.response.LoginResponse
 import com.example.aeoncompose.data.response.ProfileResponse
@@ -21,8 +21,8 @@ class LoginUseCase(private val request: RequestService, private val authenReposi
                 emit(UiState(RequestState.SUCCESS, response))
             },
             onError = {
-                emit(UiState(RequestState.FAIL, message = it.message))
+                emit(UiState(RequestState.ERROR, message = it.message))
             }
-        ).post(repo)
+        ).request(repo)
     }
 }

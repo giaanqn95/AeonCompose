@@ -52,7 +52,7 @@ class PreloadViewModel @Inject constructor(
             if (it.state == RequestState.SUCCESS)
                 emit(uiState)
             else
-                emit(UiState(RequestState.FAIL))
+                emit(UiState(RequestState.ERROR))
         }
     }
 
@@ -61,7 +61,7 @@ class PreloadViewModel @Inject constructor(
             if (it.state == RequestState.SUCCESS)
                 emit(uiState)
             else
-                emit(UiState(RequestState.FAIL))
+                emit(UiState(RequestState.ERROR))
         }
     }
 
@@ -71,11 +71,11 @@ class PreloadViewModel @Inject constructor(
                 request.getAuthentic().collect {
                     if (it.state == RequestState.SUCCESS && !it.result?.token.isNullOrEmpty())
                         _uiStateSync.value = it
-                    else _uiStateSync.value = UiState(RequestState.FAIL)
+                    else _uiStateSync.value = UiState(RequestState.ERROR)
                 }
             }
-            RequestState.FAIL -> {
-                _uiStateSync.value = UiState(RequestState.FAIL)
+            RequestState.ERROR -> {
+                _uiStateSync.value = UiState(RequestState.ERROR)
             }
         }
     }

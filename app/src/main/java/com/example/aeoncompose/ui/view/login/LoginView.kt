@@ -32,12 +32,12 @@ import com.example.aeoncompose.api.UiState
 import com.example.aeoncompose.data.ProfileService
 import com.example.aeoncompose.data.response.LoginResponse
 import com.example.aeoncompose.extensions.onClick
-import com.example.aeoncompose.ui.AeonDialog
-import com.example.aeoncompose.ui.HomeScreen
-import com.example.aeoncompose.ui.KYCScreen
 import com.example.aeoncompose.ui.base_view.AeonButtonText
 import com.example.aeoncompose.ui.base_view.AeonTextField
 import com.example.aeoncompose.ui.base_view.DialogLoading
+import com.example.aeoncompose.ui.navigation.AeonDialog
+import com.example.aeoncompose.ui.navigation.EnumKYCScreen
+import com.example.aeoncompose.ui.navigation.EnumMainScreen
 import com.example.aeoncompose.utils.ScreenUtils
 import com.example.aeoncompose.utils.ScreenUtils.rdp
 
@@ -187,15 +187,15 @@ private fun handleState(navHostController: NavHostController, loginState: UiStat
     when (loginState.state) {
         RequestState.SUCCESS -> {
             LaunchedEffect(key1 = loginState.state, block = {
-                ProfileService.authen = loginState.result ?: LoginResponse()
-                navHostController.navigate(HomeScreen.Home.name) {
-                    popUpTo(KYCScreen.getName()) {
+                ProfileService.authen = loginState.result
+                navHostController.navigate(EnumMainScreen.Main.name) {
+                    popUpTo(EnumKYCScreen.getName()) {
                         inclusive = true
                     }
                 }
             })
         }
-        RequestState.FAIL -> {
+        RequestState.ERROR -> {
             LaunchedEffect(key1 = loginState.state, block = {
                 navHostController.navigate(AeonDialog.DialogSingle.name + "/${loginState.message}")
             })

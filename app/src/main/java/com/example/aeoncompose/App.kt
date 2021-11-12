@@ -18,4 +18,5 @@ class App : Application(), LifecycleObserver {
 
     fun onAppForegrounded() {
     }
+
 }

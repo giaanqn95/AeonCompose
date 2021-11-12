@@ -26,9 +26,9 @@ class GetSync(private val request: RequestService) {
                 send(UiState(RequestState.SUCCESS, JSON.decode(it.value.data(), SyncResponse::class.java)))
             },
             onError = {
-                send(UiState(RequestState.FAIL, message = it.message))
+                send(UiState(RequestState.ERROR, message = it.message))
             }
-        ).get(repo)
+        ).request(repo)
     }
 }
 
@@ -39,9 +39,9 @@ class GetResource(private val request: RequestService) {
                 send(UiState(RequestState.SUCCESS, JSON.decode(it.value.data(), ResourceResponse::class.java)))
             },
             onError = {
-                send(UiState(RequestState.FAIL, message = it.message))
+                send(UiState(RequestState.ERROR, message = it.message))
             }
-        ).get(repo)
+        ).request(repo)
     }
 }
 
@@ -52,9 +52,9 @@ class GetProvince(private val request: RequestService) {
                 emit(UiState(RequestState.SUCCESS, JSON.decode(it.value.data(), ProvinceResponse::class.java)))
             },
             onError = {
-                emit(UiState(RequestState.FAIL, message = it.message))
+                emit(UiState(RequestState.ERROR, message = it.message))
             }
-        ).get(repo)
+        ).request(repo)
     }
 }
 

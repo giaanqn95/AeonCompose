@@ -14,7 +14,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.aeoncompose.R
-import com.example.aeoncompose.ui.KYCScreen
+import com.example.aeoncompose.ui.navigation.EnumKYCScreen
 import com.example.aeoncompose.ui.base_view.AeonButtonText
 import com.example.aeoncompose.utils.ScreenUtils
 import com.example.aeoncompose.utils.ScreenUtils.rdp
@@ -76,7 +76,7 @@ fun StartKYC(navHostController: NavHostController) {
             ) {
                 Column(modifier = Modifier.padding(10.rdp)) {
                     AeonButtonText("Đăng nhập") {
-                        navHostController.navigate(KYCScreen.Login.name) {
+                        navHostController.navigate(EnumKYCScreen.Login.name) {
                         }
                     }
                     Spacer(modifier = Modifier.height(5.rdp))

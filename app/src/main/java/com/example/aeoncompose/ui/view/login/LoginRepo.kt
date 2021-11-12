@@ -2,6 +2,7 @@ package com.example.aeoncompose.ui.view.login
 
 import com.example.aeoncompose.api.BaseRepo
 import com.example.aeoncompose.api.Repo
+import com.example.aeoncompose.api.TypeRepo
 import com.example.aeoncompose.data.request.LoginRequest
 
 
@@ -10,7 +11,8 @@ interface LoginRepo : BaseRepo {
         return Repo(
             getHeaders(),
             "auth",
-            message = LoginRequest(phoneNumber, password)
+            message = LoginRequest(phoneNumber, password),
+            typeRepo = TypeRepo.POST
         )
     }
 }

@@ -20,8 +20,8 @@ import com.example.aeoncompose.data.ProfileService
 import com.example.aeoncompose.data.response.LoginResponse
 import com.example.aeoncompose.data.response.ProfileResponse
 import com.example.aeoncompose.data.room_data.Authentic
-import com.example.aeoncompose.ui.HomeScreen
-import com.example.aeoncompose.ui.KYCScreen
+import com.example.aeoncompose.ui.navigation.EnumKYCScreen
+import com.example.aeoncompose.ui.navigation.EnumMainScreen
 
 @Composable
 fun PreloadView(navHostController: NavHostController, preloadViewModel: PreloadViewModel = hiltViewModel()) {
@@ -35,17 +35,16 @@ fun PreloadContent(navHostController: NavHostController, uiState: UiState<Authen
         RequestState.SUCCESS -> {
             LaunchedEffect(key1 = Unit, block = {
                 ProfileService.authen = LoginResponse(uiState.result?.profileResponse ?: ProfileResponse(), uiState.result?.token ?: "")
-                navHostController.navigate(HomeScreen.Home.name) {
-                    popUpTo(KYCScreen.getName()) {
-                        inclusive = true
-                    }
+                navHostController.navigate(EnumMainScreen.getName()) {
+                    popUpTo(EnumKYCScreen.getName()) { inclusive = true }
+                    launchSingleTop = true
                 }
             })
         }
-        RequestState.FAIL -> {
+        RequestState.ERROR -> {
             LaunchedEffect(key1 = Unit, block = {
-                navHostController.navigate(KYCScreen.StartKYC.name) {
-                    popUpTo(KYCScreen.Preload.name) { inclusive = true }
+                navHostController.navigate(EnumKYCScreen.StartKYC.name) {
+                    popUpTo(EnumKYCScreen.Preload.name) { inclusive = true }
                 }
             })
         }

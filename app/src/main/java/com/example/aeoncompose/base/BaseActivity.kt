@@ -6,6 +6,7 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
 import com.example.aeoncompose.utils.LogCat
+import org.greenrobot.eventbus.EventBus
 
 abstract class BaseActivity : AppCompatActivity() {
 
@@ -75,5 +76,13 @@ abstract class BaseActivity : AppCompatActivity() {
                 LogCat.d("TRIM_MEMORY_UNKNOWN=$level")
             }
         }
+    }
+
+    protected open fun registerEventBus() {
+        EventBus.getDefault().register(this)
+    }
+
+    protected open fun unregisterEventBus() {
+        EventBus.getDefault().unregister(this)
     }
 }
