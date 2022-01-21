@@ -2,6 +2,7 @@ package com.example.aeoncompose.ui.view.preload
 
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import com.example.aeoncompose.api.RequestState
 import com.example.aeoncompose.api.UiState
@@ -24,6 +25,9 @@ class PreloadViewModel @Inject constructor(
 
     private val _uiStateSync = mutableStateOf(UiState<Authentic>())
     val uiStateSync: State<UiState<Authentic>> = _uiStateSync
+
+    val _uiSync = MutableLiveData<UiState<Authentic>>()
+//    private val uiSync =
 
     init {
         getSyncData()
@@ -72,6 +76,7 @@ class PreloadViewModel @Inject constructor(
                     if (it.state == RequestState.SUCCESS && !it.result?.token.isNullOrEmpty())
                         _uiStateSync.value = it
                     else _uiStateSync.value = UiState(RequestState.ERROR)
+                    _uiSync.postValue(it)
                 }
             }
             RequestState.ERROR -> {

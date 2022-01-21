@@ -2,6 +2,7 @@ package com.example.aeoncompose.ui.view.main_home.home
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.fadeIn
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -13,15 +14,18 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.painterResource
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.LifecycleEventObserver
 import androidx.navigation.NavHostController
 import coil.annotation.ExperimentalCoilApi
 import coil.compose.rememberImagePainter
@@ -33,6 +37,7 @@ import com.example.aeoncompose.extensions.onClick
 import com.example.aeoncompose.ui.base_view.GridLayout
 import com.example.aeoncompose.ui.navigation.EnumProfileScreen
 import com.example.aeoncompose.utils.ComposePagerSnapHelper
+import com.example.aeoncompose.utils.LogCat
 import com.example.aeoncompose.utils.ScreenUtils
 import com.example.aeoncompose.utils.ScreenUtils.rdp
 import com.google.accompanist.flowlayout.FlowRow
@@ -44,6 +49,17 @@ import java.util.*
 @Composable
 fun HomeScreen(navHostController: NavHostController, homeViewModel: HomeViewModel = hiltViewModel()) {
     val homeBannerState = homeViewModel.uiStateHomeBanner.value
+    val lifecycleOwner = LocalLifecycleOwner.current
+    DisposableEffect(lifecycleOwner) {
+        // Read document: https://developer.android.com/jetpack/compose/side-effects
+        val observer = LifecycleEventObserver { _, event ->
+            LogCat.d("HomeScreen ${event.name}")
+        }
+        lifecycleOwner.lifecycle.addObserver(observer)
+        onDispose {
+            lifecycleOwner.lifecycle.removeObserver(observer)
+        }
+    }
     Column {
         HeaderProfile()
         LazyColumn {
@@ -103,7 +119,7 @@ private fun HeaderProfile() {
 @Composable
 private fun SlideBanner(uiState: UiState<PromotionResponse>) {
     val promotion = uiState.result ?: PromotionResponse()
-    AnimatedVisibility(visible = !promotion.isEmpty()) {
+    AnimatedVisibility(visible = !promotion.isEmpty(), enter = fadeIn()) {
         Box(modifier = Modifier.fillMaxWidth()) {
             Image(
                 painter = painterResource(id = R.drawable.bg_header_2),
@@ -169,9 +185,7 @@ private fun QuickAction(navHostController: NavHostController) {
                     .fillMaxWidth(0.25f)
                     .height(95.rdp)
                     .background(Color.Blue, CircleShape)
-                    .onClick {
-                        navHostController.navigate(EnumProfileScreen.getName())
-                    },
+                    .onClick { navHostController.navigate(EnumProfileScreen.getName()) },
                 contentAlignment = Alignment.Center,
             ) {
                 Text(it.toString())
@@ -187,7 +201,7 @@ fun BodyContent(modifier: Modifier = Modifier) {
             .padding(10.rdp)
             .background(Color.White)
     ) {
-        repeat(12) {
+        repeat(100) {
             Box(
                 modifier = Modifier
                     .fillMaxWidth(0.25f)

@@ -16,6 +16,6 @@ fun EditProfileScreen(navHostController: NavHostController) {
         .fillMaxSize()
         .background(Color.Yellow)
         .onClick {
-            navHostController.popBackStack(EnumProfileScreen.getName(),false)
+            navHostController.popBackStack(EnumProfileScreen.getName(),true)
         })
 }

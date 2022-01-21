@@ -50,7 +50,7 @@ class PagerSnapNestedScrollConnection(
     private val state: PagerSnapState,
     private val listState: LazyListState,
     private val scrollTo: () -> Unit
-): NestedScrollConnection {
+) : NestedScrollConnection {
 
     override fun onPreScroll(available: Offset, source: NestedScrollSource): Offset = when (source) {
         NestedScrollSource.Drag -> onScroll()
@@ -92,10 +92,11 @@ class PagerSnapNestedScrollConnection(
 @Composable
 fun ComposePagerSnapHelper(
     width: Dp,
+    state: PagerSnapState = rememberPagerSnapState(),
     context: @Composable (LazyListState) -> Unit
 ) {
 
-    val state = rememberPagerSnapState()
+
     val listState = rememberLazyListState()
 
     val scope = rememberCoroutineScope()

@@ -7,7 +7,7 @@ import androidx.compose.ui.layout.Layout
 @Composable
         /**
          * [fixedCount] is total item per row.
-         * */
+         **/
 fun GridLayout(
     modifier: Modifier = Modifier,
     fixedCount: Int = 4 /*default*/,
@@ -15,16 +15,16 @@ fun GridLayout(
 ) {
     Layout(modifier = modifier, content = content) { measurables, constraints ->
         /**
-        Để không bị sai trong trường hợp [measurables.size/fixedCount] không tròn (làm tròn xuống) => tính sai số hàng => [parentHeight] sẽ không hiển
-        thị hàng cuối cùng.
-        Cách giải quyết:
-        => [positionRow] là vị trí của hàng đang có
-        => [totalRow] = [positionRow] + 1
-        => [parentHeight] = [childSize] * [totalRow]
+         * Để không bị sai trong trường hợp [measurables.size/fixedCount] không tròn (làm tròn xuống) => tính sai số hàng => [parentHeight] sẽ không
+         * hiển thị hàng cuối cùng.
+         * Cách giải quyết:
+         * => [positionRow] là vị trí của hàng đang có
+         * => [totalRow] = [positionRow] + 1
+         * => [parentHeight] = [childSize] * [totalRow]
          **/
         var totalRow = 0
-        val childX = IntArray(measurables.size) { 0 }
-        val childY = IntArray(measurables.size) { 0 }
+        val childX = IntArray(measurables.size)
+        val childY = IntArray(measurables.size)
         val childSize = constraints.maxWidth / fixedCount
         val placeables = measurables.mapIndexed { index, measurable ->
             val placeable = measurable.measure(constraints.copy(childSize, childSize, childSize, childSize))
